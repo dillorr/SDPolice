@@ -1,5 +1,7 @@
 import pandas as pd
 import datetime
+import numpy as np
+import matplotlib.pyplot as plt
 
 path = r'~/projects/SDTechHub/policeData/policeStopsData.csv'
 
@@ -49,8 +51,40 @@ df = pd.read_csv(path, dtype={'stop_id': int,
                             'gender_nonconforming':	int,
                             'perceived_lgbt': str})
 
+df['date_stop'] = pd.to_datetime(df['date_stop'])
 
-print(df.date_stop.head())
+# print(df.info())
 
+collection = df[['exp_years', 'race', 'gender', 'disability']]
 
-                     
+# print(collection.gender.sample(10))
+# print(collection.gender.value_counts())
+
+#create male binary field
+condition = (collection['gender'] == 'Male') | (collection['gender'] == 'Transgender man/boy')
+collection['gender_binary'] = np.where(condition, 1,0)
+
+collection = collection.rename(columns={'gender_binary':'male'})
+
+# print(collection.male.value_counts())
+
+# create disability binary field
+collection['disability'] = np.where(collection['disability'] == 'None', 0, 1)
+
+# print(collection.disability.value_counts())
+
+#create race binary variable
+
+# print(collection.race.value_counts())
+
+collection['black'] = np.where(collection['race'] == 'Black/African American', 1, 0)
+
+# print(collection.black.value_counts())
+
+collection = collection[['black', 'disability','male', 'exp_years']]
+
+pd.plotting.scatter_matrix(collection, alpha=0.2)
+
+plt.savefig('scatter.png')
+
+plt.show()
