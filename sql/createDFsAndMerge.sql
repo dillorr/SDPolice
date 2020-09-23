@@ -1,3 +1,5 @@
+-- start with: mysql --local-infile=1 -u dillorr -p
+
 SHOW GLOBAL VARIABLES LIKE 'local_infile';
 SET GLOBAL local_infile = 'ON';
 show variables like 'secure_file_priv';
@@ -36,14 +38,14 @@ drop table if exists stop_details;
 -- actions taken
 
 create table actions_taken (
-stop_id0 int not null,
+stop_id int not null,
 pid0 int,
 action varchar(100),
 consented varchar(100),
-primary key (stop_id0)
+primary key (stop_id)
 );
 
-LOAD DATA LOCAL INFILE "/home/dillorr/shared-drives/C:/Users/dillon/projects/SDTechHub/policeData/actionsTaken/ripa_actions_taken_datasd.csv" 
+LOAD DATA LOCAL INFILE "projects/SDTechHub/policeData/actionsTaken/ripa_actions_taken_datasd.csv" 
 INTO TABLE actions_taken 
 FIELDS TERMINATED BY ',' 
 OPTIONALLY ENCLOSED BY '"' 
@@ -54,10 +56,10 @@ IGNORE 1 LINES;
 -- basis for propery seizure
 
 create table basis_for_property_seizure (
-stop_id1 int not null,
-pid1 int,
+stop_id int not null,
+pid int,
 basis_for_property_seizure varchar(100),
-primary key (stop_id1)
+primary key (stop_id)
 );
 
 LOAD DATA LOCAL INFILE "/home/dillorr/shared-drives/C:/Users/dillon/projects/SDTechHub/policeData/basisForPropertySeizure/ripa_prop_seize_basis_datasd.csv" 
@@ -71,11 +73,11 @@ IGNORE 1 LINES;
 -- basis for search
 
 create table basis_for_search (
-stop_id2 int not null,
-pid2 int,
+stop_id int not null,
+pid int,
 basis_for_search varchar(100),
 basis_for_search_explanation varchar(100),
-primary key (stop_id2)
+primary key (stop_id)
 );
 
 LOAD DATA LOCAL INFILE "/home/dillorr/shared-drives/C:/Users/dillon/projects/SDTechHub/policeData/basisForSearchesConducted/ripa_search_basis_datasd.csv" 
@@ -89,10 +91,10 @@ IGNORE 1 LINES;
 -- disability of persons
 
 create table disability (
-stop_id3 int not null,
-pid3 int,
+stop_id int not null,
+pid int,
 disability varchar(100),
-primary key (stop_id3)
+primary key (stop_id)
 );
 
 LOAD DATA LOCAL INFILE "/home/dillorr/shared-drives/C:/Users/dillon/projects/SDTechHub/policeData/disabilityOfPersons/ripa_disability_datasd.csv"
@@ -106,10 +108,10 @@ IGNORE 1 LINES;
 -- gender of persons
 
 create table gender (
-stop_id4 int not null,
-pid4 int,
+stop_id int not null,
+pid int,
 gender varchar(100),
-primary key (stop_id4)
+primary key (stop_id)
 );
 
 LOAD DATA LOCAL INFILE "/home/dillorr/shared-drives/C:/Users/dillon/projects/SDTechHub/policeData/genderOfPersons/ripa_gender_datasd.csv" 
@@ -123,10 +125,10 @@ IGNORE 1 LINES;
 -- property seized
 
 create table property_seized (
-stop_id5 int not null,
-pid5 int,
+stop_id int not null,
+pid int,
 type_of_property_seized varchar(100),
-primary key (stop_id5)
+primary key (stop_id)
 );
 
 LOAD DATA LOCAL INFILE "/home/dillorr/shared-drives/C:/Users/dillon/projects/SDTechHub/policeData/propertySeized/ripa_prop_seize_type_datasd.csv"
@@ -140,10 +142,10 @@ IGNORE 1 LINES;
 -- race of persons
 
 create table race (
-stop_id6 int not null,
-pid6 int,
+stop_id int not null,
+pid int,
 race varchar(100),
-primary key (stop_id6)
+primary key (stop_id)
 );
 
 LOAD DATA LOCAL INFILE "/home/dillorr/shared-drives/C:/Users/dillon/projects/SDTechHub/policeData/raceOfPersons/ripa_race_datasd.csv"
@@ -156,14 +158,14 @@ IGNORE 1 LINES;
 
 -- reason for stop
 create table reason_for_stop (
-stop_id7 int not null,
-pid7 int,
+stop_id int not null,
+pid int,
 reason_for_stop varchar(100),
 reason_for_stopcode int,
 reason_for_stop_code_text varchar (100),
 reason_for_stop_detail varchar(100),
 reason_for_stop_explanation varchar(100),
-primary key (stop_id7)
+primary key (stop_id)
 );
 
 LOAD DATA LOCAL INFILE "/home/dillorr/shared-drives/C:/Users/dillon/projects/SDTechHub/policeData/reasonForStop/ripa_stop_reason_datasd.csv"
@@ -176,13 +178,13 @@ IGNORE 1 LINES;
 
 -- result of stop
 create table result_of_stop (
-stop_id8 int not null,
+stop_id int not null,
 pid8 int,
 result_key int,
 result varchar(100),
 code int,
 result_text varchar(100),
-primary key (stop_id8)
+primary key (stop_id)
 );
 
 LOAD DATA LOCAL INFILE "/home/dillorr/shared-drives/C:/Users/dillon/projects/SDTechHub/policeData/resultOfStop/ripa_stop_result_datasd.csv" 
@@ -195,7 +197,7 @@ IGNORE 1 LINES;
 
 -- details of stop
 create table stop_details (
-stop_id9 int not null,
+stop_id int not null,
 ori varchar(100),
 agency varchar(100),
 exp_years varchar(100),
@@ -224,7 +226,7 @@ gender_non_conforming int,
 gender2 int,
 gender_nc int,
 perceived_lgbt varchar(100),
-primary key (stop_id9)
+primary key (stop_id)
 );
 
 LOAD DATA LOCAL INFILE "/home/dillorr/shared-drives/C:/Users/dillon/projects/SDTechHub/policeData/stopDetails/ripa_stops_datasd.csv"
@@ -258,15 +260,15 @@ IGNORE 1 LINES;
 
 create table merged
 	select * from actions_taken as at
-		left join basis_for_property_seizure as bp on at.stop_id0 = bp.stop_id1
-		left join basis_for_search as bs on at.stop_id0 = bs.stop_id2
-		left join disability as di on at.stop_id0 = di.stop_id3
-		left join gender as ge on at.stop_id0 = ge.stop_id4
-		left join property_seized as ps on at.stop_id0 = ps.stop_id5
-		left join race as ra on at.stop_id0 = ra.stop_id6
-		left join reason_for_stop as rf on at.stop_id0 = rf.stop_id7
-		left join result_of_stop as ro on at.stop_id0 = ro.stop_id8
-		left join stop_details as sd on at.stop_id0 = sd.stop_id9;
+		left join basis_for_property_seizure as bp on at.stop_id = bp.stop_id
+		left join basis_for_search as bs on at.stop_id = bs.stop_id
+		left join disability as di on at.stop_id = di.stop_id
+		left join gender as ge on at.stop_id = ge.stop_id
+		left join property_seized as ps on at.stop_id = ps.stop_id
+		left join race as ra on at.stop_id = ra.stop_id
+		left join reason_for_stop as rf on at.stop_id = rf.stop_id
+		left join result_of_stop as ro on at.stop_id = ro.stop_id
+		left join stop_details as sd on at.stop_id = sd.stop_id;
 
 
 
