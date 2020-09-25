@@ -128,6 +128,12 @@ collection_scaled_clustered['cluster'] = clusters
 # -7534.918733670362, -6161.839183909708, -6116.865505959439, -6505.297990296431]
 # choosing 9 clusters because of shelf from -174592.75503945883 and -115548.34537299641
 
-print(collection_scaled_clustered.head())
+# print(collection_scaled_clustered.head())
 
-collection_scaled_clustered.to_csv('~/projects/SDTechHub/analysis/clustering/collection_scaled_clustered.csv', index = False)
+# collection_scaled_clustered.to_csv('~/projects/SDTechHub/analysis/clustering/collection_scaled_clustered.csv', index = False)
+
+grouped = collection_scaled_clustered.groupby(by='cluster')
+
+for name, group in grouped:
+    print('group: ', group.cluster.sample())
+    print(group.describe())
